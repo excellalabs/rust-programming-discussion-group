@@ -26,6 +26,11 @@ struct Config {
 
 impl Config{
     fn new(args: &[String]) -> Config {
+        // a non-idiomatic way to handle errors in Rust. this would be better to catch a mistake the dev made, like assert in other languages
+        // not so great for catching a mistake the user made.
+        if args.len() < 3 {
+            panic!("not enough arguments");
+        }
         // not using references anymore, can't violate ownership rules providing slices to Config
         // most straightforward way to share these values with config is to clone them here. Copies of the data will be made.
         // clone is inefficient, but it is 2 strings and we are only doing it once.
