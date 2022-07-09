@@ -8,9 +8,7 @@ fn main() {
     // can't rely on type inference for collect, need to explicitly say Vec<String>
     let args: Vec<String> = env::args().collect();
 
-    // using references to the indexed values so the arg values do not get consumed.
-    let query = &args[1];
-    let filename = &args[2];
+    let (query, filename) = parse_config(&args);
 
     println!("Searching for {}", query);
     println!("In file {}", filename);
@@ -19,4 +17,14 @@ fn main() {
         .expect("Something went wrong reading the file");
 
     println!("With text: \n{}", contents);
+}
+
+fn parse_config(args: &[String]) -> (&str, &str) {
+    // using references to the indexed values so the arg values do not get consumed.
+    // remember from Ch2, variables are immutable by default, lack of mut means these are immutable
+    let query = &args[1];
+    let filename = &args[2];
+
+    // expression, no semicolon required, will be returned
+    (query, filename)
 }
