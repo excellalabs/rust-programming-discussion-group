@@ -8,7 +8,7 @@ fn main() {
     // can't rely on type inference for collect, need to explicitly say Vec<String>
     let args: Vec<String> = env::args().collect();
 
-    let config = parse_config(&args);
+    let config = Config::new(&args);
 
     println!("Searching for {}", config.query);
     println!("In file {}", config.filename);
@@ -24,13 +24,17 @@ struct Config {
     filename: String,
 }
 
-fn parse_config(args: &[String]) -> Config {
-    // not using references anymore, can't violate ownership rules providing slices to Config
-    // most straightforward way to share these values is to clone them now. But it makes a data copy as a con
-    // remember from Ch2, variables are immutable by default, lack of mut means these are immutable
-    let query = args[1].clone();
-    let filename = args[2].clone();
+impl Config{
+    fn new(args: &[String]) -> Config {
+        // not using references anymore, can't violate ownership rules providing slices to Config
+        // most straightforward way to share these values with config is to clone them here. Copies of the data will be made.
+        // clone is inefficient, but it is 2 strings and we are only doing it once.
+        // remember from Ch2, variables are immutable by default, lack of mut means these are immutable
+        let query = args[1].clone();
+        let filename = args[2].clone();
 
-    // expression, no semicolon required, will be returned
-    Config { query, filename }
+        // expression, no semicolon required, will be returned
+        Config { query, filename }
+    }
+
 }
