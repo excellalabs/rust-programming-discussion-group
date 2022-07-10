@@ -1,6 +1,7 @@
 use std::env;
 use std::fs;
 use std::process;
+use std::error::Error;
 
 fn main() {
     // std::env::args will panic if any argument contains invalid Unicode. we will always pass valid unicode chars for simplicity
@@ -19,14 +20,19 @@ fn main() {
     println!("Searching for {}", config.query);
     println!("In file {}", config.filename);
 
+    // just a heads up for this commit only, since we didn't handle the Result object and the possibility
+    // of an error, the compiler will generate an error here. 
     run(config);
 }
 
-fn run(config: Config) {
-    let contents = fs::read_to_string(config.filename)
-        .expect("Something went wrong reading the file");
+//  dyn Error allows different subtypes of Error to be returned for different reasons
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.filename)?;
 
     println!("With text: \n{}", contents);
+
+    // standard way to express "this side-effecting function completed without error"
+    Ok(())
 }
 
 struct Config {
