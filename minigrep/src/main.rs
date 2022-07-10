@@ -20,9 +20,10 @@ fn main() {
     println!("Searching for {}", config.query);
     println!("In file {}", config.filename);
 
-    // just a heads up for this commit only, since we didn't handle the Result object and the possibility
-    // of an error, the compiler will generate an error here. 
-    run(config);
+    if let Err(e) = run(config){
+        println!("Application Error: {}", e);
+        process::exit(1);
+    };
 }
 
 //  dyn Error allows different subtypes of Error to be returned for different reasons
